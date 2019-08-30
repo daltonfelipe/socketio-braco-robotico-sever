@@ -1,5 +1,16 @@
 import eventlet
 import socketio
+from servo import ServoPWM
+
+
+base = ServoPWM(18)
+height = ServoPWM(12)
+claw = ServoPWM(13)
+front = ServoPWM(19)
+
+
+def map_val(x,  in_min,  in_max,  out_min,  out_max):
+    return (x - in_min) * (out_max - out_min) / (in_max - in_min) + out_min
 
 io = socketio.Server(ping_timeout=30)
 
@@ -14,23 +25,27 @@ def connect(sid, environ):
 
 
 @io.on('y-axis')
-def print_y_axis_data(sid, data):
-    print('Y-axis: ', data)
+def move_arm_height(sid, data):
+    height.set_angle(map_val(float(data), -1, 1, 0, 100))
+    #print('Y-axis: ', data)
 
 
 @io.on('x-axis')
-def print_x_axis_data(sid, data):
-    print('XS-axis: ', data)
+def move_arm_base(sid, data):
+    base.set_angle(map_val(float(data), -1, 1, 0, 140))
+    #print('XS-axis: ', data)
 
 
 @io.on('estado-garra')
-def estado_garra(sid, msg):
-    print(f'Garra: {msg}')
+def move_arm_claw(sid, data):
+    claw.set_angle(float(data))
+    #print('Garra: ', data)
 
 
 @io.on('estado-front')
-def estado_front(sid, msg):
-    print(f'Front: {msg}')
+def move_arm_front(sid, data):
+    front.set_angle(float(data))
+    #print('Front: ', data)
 
 
 if __name__ == '__main__':
