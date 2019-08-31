@@ -1,0 +1,49 @@
+{% extends './layout.html' %}
+
+{% block content %}
+  <h2>Robotic Arm Server</h2>
+  <div class="d-flex">
+    <div>
+      <span>Connected Users: </span>
+      <span id="connected-users">0</span>
+    </div>
+  </div>
+
+  <div class="d-flex mt-4 justify-content-around flex-wrap align-items-stretch">
+    <div class="d-flex flex-column align-items-center">
+      <span>Base</span>
+      <span id="">0</span>
+    </div>
+
+    <div class="d-flex flex-column align-items-center">
+      <span>Base</span>
+      <span id="">0</span>
+    </div>
+
+    <div class="d-flex flex-column align-items-center">
+      <span>Base</span>
+      <span id="">0</span>
+    </div>
+
+    <div class="d-flex flex-column align-items-center">
+      <span>Base</span>
+      <span id="">0</span>
+    </div>
+  </div>
+
+  <div class="mt-4 d-flex flex-row align-items-end">
+    <ul id="connected-users-list"></ul>
+  </div>
+
+  <script type="text/javascript" charset="utf-8">
+    var socket = io();
+
+    socket.on('connected-users', function(data){
+      console.log(data)
+      $('#connected-users').text(data['connected_users_length']);
+      $('#connected-users-list').append('<li>'+ data.sid +'</li>')
+    });
+
+  </script>
+
+{% endblock %}  
